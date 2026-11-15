@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#1F4A3A">
+<meta name="description" content="会社名・屋号・ブランド名・ペット名などの画数を計算し、数字が持つ意味を解説する、みこぷらんの画数診断です。">
+<title>みこぷらん 画数診断</title>
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="assets/icon-192.png" type="image/png" sizes="192x192">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-title" content="画数診断">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="camellia" viewBox="0 0 64 64">
+      <g fill="currentColor">
+        <ellipse cx="32" cy="17" rx="12" ry="14"/>
+        <ellipse cx="32" cy="17" rx="12" ry="14" transform="rotate(72 32 33)"/>
+        <ellipse cx="32" cy="17" rx="12" ry="14" transform="rotate(144 32 33)"/>
+        <ellipse cx="32" cy="17" rx="12" ry="14" transform="rotate(216 32 33)"/>
+        <ellipse cx="32" cy="17" rx="12" ry="14" transform="rotate(288 32 33)"/>
+      </g>
+      <circle cx="32" cy="33" r="8.5" fill="#E9C46A"/>
+      <circle cx="32" cy="33" r="4" fill="#C99A2E"/>
+    </symbol>
+    <symbol id="leaf" viewBox="0 0 40 20">
+      <path d="M2 10 C 12 -2, 30 -2, 38 10 C 30 22, 12 22, 2 10 Z" fill="currentColor"/>
+      <path d="M4 10 H 34" stroke="#FAF6EE" stroke-width="1" opacity=".5"/>
+    </symbol>
+  </defs>
+</svg>
+
+<header class="site-header">
+  <div class="brand">
+    <svg class="brand-mark" aria-hidden="true"><use href="#camellia"/></svg>
+    <div>
+      <p class="brand-sub">みこぷらん</p>
+      <h1 class="brand-title">画数診断</h1>
+    </div>
+  </div>
+  <p class="brand-lead">名前の画数と、その数字が持つ意味をお伝えします</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="画面の切り替え">
+  <button class="tab" role="tab" id="tab-diagnose" aria-controls="panel-diagnose" aria-selected="true" data-panel="diagnose"><span class="tab-ic" aria-hidden="true">筆</span>診断</button>
+  <button class="tab" role="tab" id="tab-compare" aria-controls="panel-compare" aria-selected="false" data-panel="compare"><span class="tab-ic" aria-hidden="true">較</span>比較</button>
+  <button class="tab" role="tab" id="tab-search" aria-controls="panel-search" aria-selected="false" data-panel="search"><span class="tab-ic" aria-hidden="true">探</span>吉数</button>
+  <button class="tab" role="tab" id="tab-rules" aria-controls="panel-rules" aria-selected="false" data-panel="rules"><span class="tab-ic" aria-hidden="true">則</span>ルール</button>
+  <button class="tab" role="tab" id="tab-about" aria-controls="panel-about" aria-selected="false" data-panel="about"><span class="tab-ic" aria-hidden="true">典</span>資料</button>
+</nav>
+
+<div class="mode-bar">
+  <span class="mode-label" id="mode-label">漢字の字体</span>
+  <div class="segmented" role="radiogroup" aria-labelledby="mode-label">
+    <button type="button" role="radio" aria-checked="true" data-mode="shin">新字体</button>
+    <button type="button" role="radio" aria-checked="false" data-mode="kyu">旧字体</button>
+  </div>
+</div>
+
+<div id="data-alert" class="data-alert" hidden></div>
+
+<main>
+  <!-- 診断 -->
+  <section class="panel" id="panel-diagnose" role="tabpanel" aria-labelledby="tab-diagnose">
+    <form id="diagnose-form" class="card form-card" autocomplete="off">
+      <fieldset class="field">
+        <legend class="field-label">何の名前ですか？</legend>
+        <div class="chips" id="type-chips">
+          <label class="chip"><input type="radio" name="type" value="会社名・屋号" checked><span>会社名・屋号</span></label>
+          <label class="chip"><input type="radio" name="type" value="ブランド名・商品名"><span>ブランド名・商品名</span></label>
+          <label class="chip"><input type="radio" name="type" value="ペットの名前"><span>ペットの名前</span></label>
+          <label class="chip"><input type="radio" name="type" value="活動名・ニックネーム"><span>活動名・ニックネーム</span></label>
+          <label class="chip"><input type="radio" name="type" value="アプリ名・サイト名"><span>アプリ名・サイト名</span></label>
+          <label class="chip"><input type="radio" name="type" value="その他"><span>その他</span></label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label class="field-label" for="name-input">名前を入力してください</label>
+        <input id="name-input" class="text-input" type="text" inputmode="text" enterkeyhint="done" placeholder="例：椿星命術、Tsubaki" maxlength="40" autocapitalize="off" spellcheck="false">
+        <p class="hint">漢字・ひらがな・カタカナ・英字（アルファベット）に対応しています。数字・記号は初期版では計算しません。</p>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">画数を調べる</button>
+        <button type="button" class="btn btn-ghost" id="clear-btn">クリア</button>
+      </div>
+    </form>
+
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <!-- 比較 -->
+  <section class="panel" id="panel-compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
+    <form id="compare-form" class="card form-card" autocomplete="off">
+      <h2 class="section-title">名前の候補を比べる</h2>
+      <p class="hint">最大3つまで入力できます。</p>
+      <div class="field compact"><label class="field-label" for="cmp1">候補 1</label><input id="cmp1" class="text-input" type="text" maxlength="40" spellcheck="false" placeholder="例：椿星命"></div>
+      <div class="field compact"><label class="field-label" for="cmp2">候補 2</label><input id="cmp2" class="text-input" type="text" maxlength="40" spellcheck="false"></div>
+      <div class="field compact"><label class="field-label" for="cmp3">候補 3</label><input id="cmp3" class="text-input" type="text" maxlength="40" spellcheck="false"></div>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">比べる</button>
+        <button type="button" class="btn btn-ghost" id="compare-clear">クリア</button>
+      </div>
+    </form>
+    <div id="compare-result" aria-live="polite"></div>
+  </section>
+
+  <!-- 吉数候補 -->
+  <section class="panel" id="panel-search" role="tabpanel" aria-labelledby="tab-search" hidden>
+    <form id="search-form" class="card form-card" autocomplete="off">
+      <h2 class="section-title">星2つ以上の画数をさがす</h2>
+      <p class="hint">今の総画数から、あと何画増やすと星2つ以上の数字になるかを表示します（1〜81画の範囲）。</p>
+      <div class="field compact">
+        <label class="field-label" for="current-total">今の総画数</label>
+        <div class="number-row">
+          <input id="current-total" class="text-input number-input" type="number" inputmode="numeric" min="0" max="81" step="1" placeholder="例：28">
+          <span class="unit">画</span>
+        </div>
+        <p class="hint" id="search-from"></p>
+      </div>
+      <fieldset class="field compact">
+        <legend class="field-label">表示する星の数</legend>
+        <div class="segmented wide" role="radiogroup">
+          <button type="button" role="radio" aria-checked="true" data-min="2">★2つ以上</button>
+          <button type="button" role="radio" aria-checked="false" data-min="3">★3つのみ</button>
+        </div>
+      </fieldset>
+      <div class="actions"><button type="submit" class="btn btn-primary">さがす</button></div>
+    </form>
+    <div id="search-result" aria-live="polite"></div>
+  </section>
+
+  <!-- 計算ルール -->
+  <section class="panel prose" id="panel-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
+    <article class="card">
+      <h2 class="section-title">画数の計算ルール</h2>
+      <p>名前の一文字ずつの画数を合計した「総画数」で診断します。人の姓名判断（天格・人格・地格などの五格）は扱いません。何の名前を選んでも、計算方法と診断文章は同じです。</p>
+
+      <h3>漢字</h3>
+      <ul>
+        <li>漢字画数辞書 <strong>KANJIDIC2</strong> に登録された画数を使います（<span data-fill="kanji-count">—</span>字収録）。文字コードや文字数を画数として扱うことはありません。</li>
+        <li><strong>新字体（標準）</strong>：入力された字をそのまま数えます。旧字体（例：國）が入力された場合は、検証済み対応表にある字だけ新字体（国）に置き換えて数えます。</li>
+        <li><strong>旧字体</strong>：検証済み対応表（<span data-fill="kyu-count">—</span>組）にある字だけ旧字体に置き換えて数えます（例：会→會、学→學）。対応表にない字は推測で変換せず、そのまま数えます。</li>
+        <li>旧字体の字形が互換漢字として辞書にある字（例：社→社、器→器 など<span data-fill="compat-count">—</span>字）は、その字形の画数を使います。</li>
+        <li>旧字体の画数を辞書で確認できない字（例：教→敎、清→淸、青→靑）、意味によって旧字体が変わる字（例：余・芸・弁・台）は、旧字体モードでは計算しません。</li>
+        <li>字形の細部だけが旧字体と異なる字（例：平・成）は辞書の画数で数え、結果に注意書きを表示します。</li>
+        <li>部首を元の字で数える数え方（さんずい＝水で4画、くさかんむり＝6画 など）は流派によって異なるため、採用していません。</li>
+        <li>辞書にない漢字（例：髙・𠮷 などの一部の異体字）は「この文字の画数は確認できません」と表示し、総画数を出しません。</li>
+      </ul>
+
+      <h3>ひらがな・カタカナ</h3>
+      <ul>
+        <li><strong>ひらがな</strong>：伝統的な姓名判断で使われる画数表を採用しています（複数の姓名判断サイトで採用されている方式を参考にしました）。小学校の書写で学ぶ現代の筆順とは画数が異なる字があります（例：な＝5画、ね＝4画、る＝3画）。</li>
+        <li>ひらがなの画数は流派によって数え方が異なる字があります。</li>
+        <li><strong>カタカナ</strong>：小学校の書写で学ぶ楷書（教科書体）の画数を採用しています。</li>
+        <li>半角カタカナは全角に直して数えます（ﾐｺ → ミコ）。</li>
+        <li>濁点「゛」は <strong>2画</strong>、半濁点「゜」は <strong>1画</strong> を元の字に加えます（例：が＝か3＋2＝5画、ぷ＝ふ4＋1＝5画）。</li>
+        <li>小さい字（ゃ・っ・ァ など）は元の大きさの字と同じ画数です（例：ゃ＝や3画）。</li>
+        <li>長音符「ー」は <strong>1画</strong> です。</li>
+        <li>踊り字「々」は直前の漢字と同じ画数で数えます（例：佐々木＝7＋7＋4）。</li>
+        <li>ゐ・ゑ・ヰ・ヱ・ゝ・ゞ などは数え方が定まらないため、初期版では計算しません。</li>
+      </ul>
+      <details class="kana-table">
+        <summary>かなの画数一覧を見る</summary>
+        <div id="kana-table"></div>
+      </details>
+      <details class="kana-table">
+        <summary>ひらがなの変更点と計算例（現代の筆順方式との比較）</summary>
+        <div id="kana-changes"></div>
+      </details>
+
+      <h3>英字（アルファベット）</h3>
+      <ul>
+        <li>英字の画数には伝統的な統一基準がないため、みこぷらんが採用したルールで数えます。</li>
+        <li>飾りのないブロック体で書いた形で、直線・曲線のまとまりごとに1画と数えます。角で向きが変わるところで区切ります（例：L＝2画、E＝4画、M＝4画）。</li>
+        <li>角のないなめらかな線は続けて1画です（例：O・S・U＝1画）。i・j の点は1画です。</li>
+        <li>大文字・小文字は入力どおりに数えます（例：A＝3画、a＝2画）。全角英字は半角に直して数えます。</li>
+        <li>アクセント記号つきの文字（é など）は計算しません。</li>
+      </ul>
+      <details class="kana-table">
+        <summary>英字の画数一覧を見る</summary>
+        <div id="latin-table"></div>
+      </details>
+
+      <h3>数字・記号・スペース</h3>
+      <ul>
+        <li>数字は画数の伝統的な統一基準がないため、初期版では計算しません。漢字やかなで表記した名前で診断してください（例：3 → 三）。</li>
+        <li>記号（・＆！など）は画数に含めず、記号が入っていると総画数を出しません。記号を除いて入力してください。</li>
+        <li>スペース（全角・半角）は数えずに計算します。</li>
+      </ul>
+
+      <h3>81画を超える場合</h3>
+      <p>81画を超える数を1〜81に換算する方法は流派によって異なるため、初期版では換算しません。実際の総画数を表示し、「評価対象外」とご案内します。</p>
+    </article>
+  </section>
+
+  <!-- 参考資料 -->
+  <section class="panel prose" id="panel-about" role="tabpanel" aria-labelledby="tab-about" hidden>
+    <article class="card">
+      <h2 class="section-title">星評価の見方</h2>
+      <ul class="legend" id="legend"></ul>
+      <p class="small">星の数が少なくても、悪い名前や不幸になる名前という意味ではありません。数字の特徴を知り、活かし方の参考にしてください。</p>
+    </article>
+
+    <article class="card">
+      <h2 class="section-title">診断データについて</h2>
+      <p>伝統的な81数理の解釈を参考に、みこぷらんが独自に構成した診断データ（暫定版）を使用しています。</p>
+      <p class="small" id="data-status"></p>
+      <details>
+        <summary>1〜81画の一覧を見る</summary>
+        <div id="data-table" class="data-table"></div>
+      </details>
+    </article>
+
+    <article class="card">
+      <h2 class="section-title">画数辞書の出典・ライセンス</h2>
+      <dl class="sources">
+        <dt>漢字の画数：KANJIDIC2</dt>
+        <dd>© Electronic Dictionary Research and Development Group（EDRDG）。Creative Commons 表示-継承 4.0 国際（CC BY-SA 4.0）。<br>
+          <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project" target="_blank" rel="noopener">KANJIDIC Project</a> ／ <a href="https://www.edrdg.org/edrdg/licence.html" target="_blank" rel="noopener">ライセンス</a><br>
+          収録範囲：JIS X 0208・JIS X 0212・JIS X 0213 の漢字 <span data-fill="kanji-count">—</span>字（常用漢字・人名用漢字を含む）。JSON 変換に kanjidic2-json 0.1.0（2025年4月）を使用。</dd>
+        <dt>新字体・旧字体の対応表：kyujitai.js</dt>
+        <dd>© hakatashi、MIT License。<a href="https://github.com/hakatashi/kyujitai.js" target="_blank" rel="noopener">github.com/hakatashi/kyujitai.js</a><br>
+          この対応表のうち、KANJIDIC2 の異体字参照で相互に確認できた <span data-fill="kyu-count">—</span>組のみを使用しています。</dd>
+        <dt>互換漢字の対応</dt>
+        <dd>Unicode の正準分解（CJK互換漢字 → 統合漢字）を使用しています。</dd>
+        <dt>ひらがな・カタカナ</dt>
+        <dd>みこぷらんの採用ルール（教科書体の画数）。「ルール」画面に一覧があります。</dd>
+      </dl>
+    </article>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <svg class="footer-mark" aria-hidden="true"><use href="#camellia"/></svg>
+  <p class="disclaimer">この診断は伝統的な81数理の解釈を参考に、みこぷらんが独自に構成したものです。数字の意味を知り、名付けの参考としてお楽しみください。将来の成功や運命を保証するものではありません。</p>
+  <p class="copyright">© みこぷらん</p>
+</footer>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="data/kanji-strokes.js"></script>
+<script src="data/kyujitai-map.js"></script>
+<script src="data/kana-strokes.js"></script>
+<script src="data/latin-strokes.js"></script>
+<script src="data/kakusu-fallback.js"></script>
+<script src="js/stroke-calc.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
